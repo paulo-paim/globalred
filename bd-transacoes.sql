@@ -8,5 +8,6 @@ CREATE TABLE transacoes (
     cliente VARCHAR(255) NOT NULL,
     valor FLOAT NOT NULL,
     categoria VARCHAR(255) NOT NULL,
-    status VARCHAR(255) NOT NULL
+    status VARCHAR(255) NOT NULL,
+    data_transacao TIMESTAMP NOT NULL
 );
