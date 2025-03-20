@@ -12,22 +12,23 @@ import java.time.LocalDateTime;
 public class Transacao {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transacao_seq")
+    @SequenceGenerator(name = "transacao_seq", sequenceName = "transacao_sequence", allocationSize = 1)
     private Integer id;
 
-    @NotNull
+    @Column(nullable = false)
     private String cliente;
 
-    @NotNull
+    @Column(nullable = false)
     private float valor;
 
-    @NotNull
+    @Column(nullable = false)
     private LocalDateTime data_transacao;
 
-    @NotNull
+    @Column(nullable = false)
     private String categoria;
 
-    @NotNull
+    @Column(nullable = false)
     private String status;
 
 
@@ -43,7 +44,7 @@ public class Transacao {
     public Transacao(TransacaoRecord record){
         this.cliente = record.cliente();
         this.valor = record.valor();
-        this.data_transacao = record.data_transacao().atStartOfDay();
+        this.data_transacao = record.data_transacao();
         this.categoria = record.categoria();
         this.status = record.status();
     }

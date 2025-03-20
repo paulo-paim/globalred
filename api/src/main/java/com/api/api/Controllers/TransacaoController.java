@@ -1,9 +1,11 @@
 package com.api.api.Controllers;
 
 
+import com.api.api.Entities.Transacao;
 import com.api.api.Records.TransacaoRecord;
 import com.api.api.Services.TransacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
@@ -20,22 +22,16 @@ public class TransacaoController {
     @Autowired
     private TransacaoService service;
 
+
     @GetMapping
-    public ResponseEntity filtroCategoria(@RequestParam(value = "categoria", required = false) String categoria, @RequestParam(value = "status", required = false) String status){
+    public ResponseEntity filtroCategoria(
+            Pageable pageable,
+            @RequestParam(value = "categoria", required = false) String categoria,
+            @RequestParam(value = "status", required = false) String status){
 
-        if(categoria != null && status != null)
-            return new ResponseEntity(this.service.buscarPorStatusECategoria(status, categoria), HttpStatus.OK);
-
-        if(categoria != null)
-            return new ResponseEntity(this.service.buscarPorCategoria(categoria), HttpStatus.OK);
-
-        return  new ResponseEntity(this.service.buscarPorStatus(status), HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(service.filtrarPorStatusOuCategoria(status, categoria, pageable));
     }
 
-//    @GetMapping
-//    public ResponseEntity filtroStatus(@RequestParam("status") String status){
-//        return new ResponseEntity(this.service.buscarPorStatus(status), HttpStatus.OK);
-//    }
 
     @PostMapping
     public String novaTransacao(@RequestBody  TransacaoRecord record){

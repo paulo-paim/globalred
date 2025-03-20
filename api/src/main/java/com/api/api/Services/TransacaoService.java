@@ -17,21 +17,25 @@ public class TransacaoService {
     @Autowired
     private TransacoesRepository repository;
 
-    public List<Transacao> buscarPorCategoria(String categoria){
-        return this.repository.findByCategoria(categoria);
-    }
-
-    public List<Transacao> buscarPorStatus(String status){
-        return this.repository.findByStatus(status);
-    }
-
     public void novaTransacao(TransacaoRecord record){
         Transacao novaTransacao = new Transacao(record);
         this.repository.save(novaTransacao);
     }
 
-    public List<Transacao> buscarPorStatusECategoria(String status, String categoria){
-        return this.repository.findByStatusECategoria(status,categoria);
+    public Page<Transacao>  filtrarPorStatusOuCategoria(String status, String categoria, Pageable pageable){
+        if (status != null && categoria != null) {
+            return repository.findByStatusAndCategoria(status, categoria, pageable);
+        } else if (status != null) {
+            return repository.findByStatus(status, pageable);
+        } else if (categoria != null) {
+            return repository.findByCategoria(categoria, pageable);
+        } else {
+            return repository.findAll(pageable);
+        }
+    }
+
+    public Page<Transacao> listarTransacoes(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
 
